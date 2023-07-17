@@ -2,9 +2,9 @@
 import numpy as np
 from qutip import *
 
-def ensemble_op(op,n,N):
+def tensor_op(op,n,N):
     #returns IxIxIx...(op_n)xIxI...xI
-    #I = I_(NxN)
+    #I has dimensons of op
     if n > N-1:
         raise ValueError("index needs to be between 0 and"+str(N)+"-1")
 
@@ -16,13 +16,23 @@ def ensemble_op(op,n,N):
     nid = tensor(Neye)
     return nid
 
+def ensemble_op(op, N):
+    #sum of tensor operators
+    op_ensemble = 0
+    for i in range(N):
+        op_ensemble += tensor_op(op,i,N)
+    return op_ensemble
+
+
 def op_padded(op,N):
     #N dim I is created
-    #if dim(op) = n, first nxn block on the diagonal is replaced by op
+    #if dim(op) = n < N, first nxn block on the diagonal is replaced by op
     if op.type !="oper":
         raise ValueError("entered invalid operator")
-    op_N = np.identity(N, dtype=complex)
     op_dim = op.shape[0]
+    if op_dim > N:
+        raise ValueError("operator dimension larger than dimension provided")
+    op_N = np.identity(N, dtype=complex)
     op_N[0:op_dim, 0:op_dim] = op.full()
     return op_N
 
@@ -41,7 +51,6 @@ class spin_algebra:
     
     def generators_arr(self):
         #return all generators for a spin-n algebra
-        #for now with fixed dimensions
         
 
         return
