@@ -16,6 +16,7 @@ class tmon_system:
         self.g_arr = g_arr #g^n_i = g_arr[n][i]
         self.omega = omega #freq of photonic mode
         self.v_arr = self.freq_list() #v[n][i] = v^n_i
+        self.self_energy = np.zeros((self.N,self.d + 1))
     
     def freq_list(self):
         #calculate v^n_i
@@ -77,6 +78,7 @@ class tmon_system:
             for i in range(self.d + 1):
                 c_ni = (self.g_arr[n][i-1]**2)*np.heaviside(i,0)/(self.v_arr[n][i-1]- self.omega) + self.v_arr[n][i] - delta_arr[i]
                 H0 = H0 + c_ni*self.tensor_projection_op(n,i,i)
+                self.self_energy[n][i] = c_ni
         
         H1 = 0
         for n in range(self.N):
@@ -89,13 +91,17 @@ class tmon_system:
         
         return H0 + H1
 
-def generate_tmon_arch(N,Nlevel):
+def generate_tmon_arch(N,Nlevel, identical = True, g = 1, o = 2):
     #scaling is 1 to 100MHz
-    E_j =  np.absolute(np.random.normal(200,20, N))
-    E_c = np.absolute(np.random.normal(2.5,0.2, N))
+    if identical == True:
+        E_j =  np.absolute(np.random.normal(200,0, N))
+        E_c = np.absolute(np.random.normal(2.5,0, N))    
+    else:
+        E_j =  np.absolute(np.random.normal(200,20, N))
+        E_c = np.absolute(np.random.normal(2.5,0.2, N))
     g_arr = np.zeros((N,Nlevel))
     for n in range(N):
         for i in range(Nlevel):
-            g_arr[n][i] = 1
-    omega = 2
+            g_arr[n][i] = g
+    omega = o
     return E_j, E_c, g_arr,omega 
