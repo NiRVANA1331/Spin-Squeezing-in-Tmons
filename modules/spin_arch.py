@@ -32,13 +32,13 @@ class tmon_system:
     
     def cal_delta(self):
         #simplest version is to equate to average over transmons i.e n
+        #delta_arr[i] given avg value for |i><i| level across all tmons
         delta_arr = []
-        
-        for n in range(self.N):
+        for i in range(self.d +1):
             temp = 0
-            for i in range(self.d +1):
+            for n in range(self.N):
                 temp = temp + ((self.g_arr[n][i]**2)*np.heaviside(i,0)/(self.v_arr[n][i-1]-self.omega)+self.v_arr[n][i])
-            delta_arr.append(temp/(self.d+1))
+            delta_arr.append(temp/self.N)
         return delta_arr
     
     def tensor_id(self, dim = None):
@@ -91,7 +91,7 @@ class tmon_system:
         
         return H0 + H1
 
-def generate_tmon_arch(N,Nlevel, identical = True, g = 1, o = 2):
+def generate_tmon_arch(N,Nlevel, identical = True, g = 1, o = 55):
     #scaling is 1 to 100MHz
     if identical == True:
         E_j =  np.absolute(np.random.normal(200,0, N))
