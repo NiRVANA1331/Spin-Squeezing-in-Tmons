@@ -36,6 +36,22 @@ def op_padded(op,N):
     op_N[0:op_dim, 0:op_dim] = op.full()
     return op_N
 
+#dumb way for spin 1
+def gellmann_matrices():
+    # Gell-Mann matrices in 3x3 dimension
+    lambda1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 0]], dtype=complex)
+    lambda2 = np.array([[0, -1j, 0], [1j, 0, 0], [0, 0, 0]], dtype=complex)
+    lambda3 = np.array([[1, 0, 0], [0, -1, 0], [0, 0, 0]], dtype=complex)
+    lambda4 = np.array([[0, 0, 1], [0, 0, 0], [1, 0, 0]], dtype=complex)
+    lambda5 = np.array([[0, 0, -1j], [0, 0, 0], [1j, 0, 0]], dtype=complex)
+    lambda6 = np.array([[0, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)
+    lambda7 = np.array([[0, 0, 0], [0, 0, -1j], [0, 1j, 0]], dtype=complex)
+    lambda8 = np.array([[1/np.sqrt(3), 0, 0], [0, 1/np.sqrt(3), 0], [0, 0, -2/np.sqrt(3)]], dtype=complex)
+
+    gellmann_matrices_list = [lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8]
+
+    return gellmann_matrices_list
+
 #create spin operators
 class spin_algebra:
     #class to create all operators for a system of N spin systems
