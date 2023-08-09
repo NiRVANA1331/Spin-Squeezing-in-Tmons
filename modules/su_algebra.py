@@ -52,6 +52,18 @@ def gellmann_matrices():
 
     return gellmann_matrices_list
 
+def spin1_tensorop():
+    #tensor operators of spin 1 as explained in Begzjav Et.al, 2021 
+    sx = Qobj(np.array([[0, 1, 0], [1, 0, 0], [0, 0, 0]], dtype=complex))
+    sy = Qobj(np.array([[0, -1j, 0], [1j, 0, 0], [0, 0, 0]], dtype=complex))
+    sz = Qobj(np.array([[1, 0, 0], [0, -1, 0], [0, 0, 0]], dtype=complex))
+    q_x2_y2 = sx**2 - sy**2
+    q_3z2_r2 = 3*sz**2-2* np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=complex)
+    qxy = sx*sy + sy*sx
+    qyz = sy*sz + sz*sx 
+    qzx = sz*sx + sx*sz
+    return [sx,sy,sz,q_x2_y2, q_3z2_r2,qxy,qyz,qzx]
+
 #create spin operators
 class spin_algebra:
     #class to create all operators for a system of N spin systems
