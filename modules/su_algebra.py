@@ -36,10 +36,6 @@ def op_padded(op,N):
     op_N[0:op_dim, 0:op_dim] = op.full()
     return op_N
 
-def spin1_op(op_type = "gellmann"):
-    if op_type == "gellmann":
-        return
-    return
 #dumb way for spin 1
 def gellmann_matrices():
     # Gell-Mann matrices in 3x3 dimension
@@ -62,12 +58,34 @@ def spin1_tensorop():
     sy = Qobj(np.array([[0, -1j, 0], [1j, 0, 0], [0, 0, 0]], dtype=complex))
     sz = Qobj(np.array([[1, 0, 0], [0, -1, 0], [0, 0, 0]], dtype=complex))
     q_x2_y2 = sx**2 - sy**2
-    q_3z2_r2 = 3*sz**2-2* np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=complex)
+    q_3z2_r2 = (3*(sz**2))-(2* np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=complex))
     qxy = sx*sy + sy*sx
-    qyz = sy*sz + sz*sx 
+    qyz = sy*sz + sz*sy 
     qzx = sz*sx + sx*sz
     return [sx,sy,sz,q_x2_y2, q_3z2_r2,qxy,qyz,qzx]
 
+def Qgen_op(N, Nlevel, op_type="gellmann"):
+    #optimize this to handel general spin n operators with for loop
+    if op_type == "gellmann":
+        l1,l2,l3,l4,l5,l6,l7,l8 = gellmann_matrices()
+    elif  op_type == "tensor":
+        l1,l2,l3,l4,l5,l6,l7,l8 = spin1_tensorop()
+        
+    J1 = Qobj(ensemble_op(op_padded(l1,Nlevel), N))
+    J2 = Qobj(ensemble_op(op_padded(l2,Nlevel), N))
+    J3 = Qobj(ensemble_op(op_padded(l3,Nlevel), N))
+    J4 = Qobj(ensemble_op(op_padded(l4,Nlevel), N))
+    J5 = Qobj(ensemble_op(op_padded(l5,Nlevel), N))
+    J6 = Qobj(ensemble_op(op_padded(l6,Nlevel), N))
+    J7 = Qobj(ensemble_op(op_padded(l7,Nlevel), N))
+    J8 = Qobj(ensemble_op(op_padded(l8,Nlevel), N))
+    return [J1,J2,J3,J4,J5,J6,J7,J8]
+
+
+    
+
+###...............................................................................
+###...............................................................................
 #create spin operators
 class spin_algebra:
     #class to create all operators for a system of N spin systems
