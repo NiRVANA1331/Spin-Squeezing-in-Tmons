@@ -1,7 +1,7 @@
 import numpy as np
 from qutip import *
 from tqdm.auto import tqdm
-
+#change padding
 #Hamiltonian for a set of transmons coupled to a mode
 class tmon_system:
     def __init__(self,N, Nlevel, E_c, E_j, g_arr, omega):
@@ -70,6 +70,7 @@ class tmon_system:
     def H_I(self, delta_arr = None):
         #rotataed time indp effective hamiltonian
         #lambda_arr contains \Delta_i to be added as self energy corrections
+        #change interaction term
         if delta_arr==None:
             delta_arr = self.cal_delta()
         
@@ -100,6 +101,7 @@ def generate_tmon_arch(N,Nlevel, identical = True, g = 1, o = 55):
         E_j =  np.absolute(np.random.normal(200,20, N))
         E_c = np.absolute(np.random.normal(2.5,0.2, N))
     g_arr = np.zeros((N,Nlevel))
+    #correct g with root n scaling
     for n in range(N):
         for i in range(Nlevel):
             g_arr[n][i] = g
