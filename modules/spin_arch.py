@@ -50,9 +50,9 @@ class tmon_system:
         nid = tensor(Neye)
         return nid
           
-    def tensor_projection_op(self,n,i,j, dim = None):
+    def tensor_projection_op(self,n,i,j,dim = None):
         #returns IxIxIx...(sq_root(i)sq_root(j)|i><j|_n)xIxI...xI
-        ##Have scaled |i><j| by proper constant
+        ##Have option to scale |i><j| by proper constant
         if n > self.N-1:
             print("invalid n")
             return
@@ -62,8 +62,10 @@ class tmon_system:
         Neye = []
         for k in  range(self.N):
             Neye.append(qeye(dim))
+        
         #(|i><j|_n)
         Neye[n] = basis(dim,i)*basis(dim,j).dag()
+            
         nid = tensor(Neye)
         return nid
         
