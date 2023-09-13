@@ -1,7 +1,6 @@
 import numpy as np
 from qutip import *
 from tqdm.auto import tqdm
-#change padding
 #Hamiltonian for a set of transmons coupled to a mode
 class tmon_system:
     def __init__(self,N, Nlevel, E_c, E_j, g_arr, omega):
@@ -52,7 +51,8 @@ class tmon_system:
         return nid
           
     def tensor_projection_op(self,n,i,j, dim = None):
-        #returns IxIxIx...(|i><j|_n)xIxI...xI
+        #returns IxIxIx...(sq_root(i)sq_root(j)|i><j|_n)xIxI...xI
+        ##Have scaled |i><j| by proper constant
         if n > self.N-1:
             print("invalid n")
             return
@@ -70,7 +70,6 @@ class tmon_system:
     def H_I(self, delta_arr = None):
         #rotataed time indp effective hamiltonian
         #lambda_arr contains \Delta_i to be added as self energy corrections
-        #change interaction term
         if delta_arr==None:
             delta_arr = self.cal_delta()
         
@@ -84,7 +83,8 @@ class tmon_system:
         H1 = 0
         for n in range(self.N):
             for m in range(self.N):
-                for i in range(self.d + 1):
+                for i in range(self.d):
+                #no need to include d+1th level for vaccuum states of photonic mode
                     if n == m:
                         break
                     c_nmi = 0.5*(self.g_arr[n][i]*self.g_arr[m][i])/(self.omega - self.v_arr[m][i])
