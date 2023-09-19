@@ -24,7 +24,7 @@ def ensemble_op(op, N):
     return op_ensemble
 
 
-def op_padded(op,N):
+def op_padded(op,N, no = 0):
     #N dim I is created
     #if dim(op) = n < N, first nxn block on the diagonal is replaced by op
     if op.type !="oper":
@@ -32,7 +32,10 @@ def op_padded(op,N):
     op_dim = op.shape[0]
     if op_dim > N:
         raise ValueError("operator dimension larger than dimension provided")
-    op_N = np.identity(N, dtype=complex)
+    if no == 1:
+        op_N = np.identity(N, dtype=complex)
+    elif no == 0:
+        op_N = np.zeros((N,N), dtype=complex)
     op_N[0:op_dim, 0:op_dim] = op.full()
     return op_N
 
@@ -82,8 +85,19 @@ def Qgen_op(N, Nlevel, op_type="gellmann"):
     return [J1,J2,J3,J4,J5,J6,J7,J8]
 
 
-    
-
+def gen_basisoperators(N, Nlevel, spin = 0.5, op_type = "gellmann"):
+    if spin == 0.5:
+        Jx = Qobj(0.5*ensemble_op(op_padded(sigmax(),Nlevel), N))
+        Jy = Qobj(0.5*ensemble_op(op_padded(sigmay(),Nlevel), N))
+        Jz = Qobj(0.5*ensemble_op(op_padded(sigmaz(),Nlevel), N))
+        J_arr = [Jx,Jy,Jz]
+        return J_arr
+    if spin ==1:
+        if op_type == "pauli":
+            temp = Qgen_op(N,Nlevel, "gellmann")
+            return temp[:3]
+        else:
+            return Qgen_op(N,Nlevel, op_type)
 ###...............................................................................
 ###...............................................................................
 #create spin operators
