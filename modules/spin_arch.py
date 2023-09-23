@@ -87,9 +87,10 @@ class tmon_system:
             for m in range(self.N):
                 for i in range(self.d):
                 #no need to include d+1th level for vaccuum states of photonic mode
+                #correction factor of sqrt(i+1)sqrt(j+1) = (i+1) in c_nmi
                     if n == m:
                         break
-                    c_nmi = 0.5*(self.g_arr[n][i]*self.g_arr[m][i])/(self.omega - self.v_arr[m][i])
+                    c_nmi = 0.5*(self.g_arr[n][i]*self.g_arr[m][i]*(i+1))/(self.omega - self.v_arr[m][i])
                     H1 = H1 + c_nmi*(self.tensor_projection_op(n,i,i+1)*self.tensor_projection_op(m,i+1,i) + self.tensor_projection_op(n,i+1,i)*self.tensor_projection_op(m,i,i+1))
         
         return H0 + H1
